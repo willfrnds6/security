@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+
 public class InjectionTest {
     private final InjectionService injectionService = InjectionService.getInstance();
 
@@ -63,5 +65,24 @@ public class InjectionTest {
     @DisplayName("Record with annotation")
     void recordWithAnnotation() {
         Assertions.assertTrue(injectionService.isDataSecured(new SecondRecordTest("Just for ;DROP TABLE user; test")));
+    }
+
+    @Test
+    void list() {
+        ArrayList<String> listWithInjection = new ArrayList<String>();
+        listWithInjection.add("Now a normal test");
+        listWithInjection.add("Just for ;DROP TABLE user; test");
+        listWithInjection.add("Now a normal test");
+
+
+        ArrayList<String> listWithoutInjection = new ArrayList<String>();
+        listWithoutInjection.add("Now a normal test");
+        listWithoutInjection.add("Just for ;DROP TABLE user; test");
+        listWithoutInjection.add("Now a normal test");
+
+        Assertions.assertAll(() -> {
+            Assertions.assertFalse(injectionService.isDataSecured(listWithInjection));
+            Assertions.assertTrue(injectionService.isDataSecured(listWithoutInjection));
+        });
     }
 }
