@@ -68,6 +68,7 @@ public class InjectionTest {
     }
 
     @Test
+    @DisplayName("List detection")
     void list() {
         ArrayList<String> injection = new ArrayList<>();
         injection.add("Now a normal test");
@@ -81,6 +82,35 @@ public class InjectionTest {
         Assertions.assertAll(() -> {
             Assertions.assertFalse(injectionService.isDataSecured(injection));
             Assertions.assertTrue(injectionService.isDataSecured(regularList));
+        });
+    }
+
+    @Test
+    @DisplayName("HTML injection detection")
+    void htmlInjection() {
+        // In string
+        boolean injectedString = injectionService.isDataSecured("<html>Juste for test</html>");
+        boolean clearString = injectionService.isDataSecured("Juste for test");
+
+        // In list
+        ArrayList<Object> injectedList = new ArrayList<>();
+        injectedList.add("Juste for test");
+        injectedList.add("<html>Juste for test</html>");
+        boolean injectedListIsSecured = injectionService.isDataSecured(injectedList);
+
+        // In record
+        FirstRecordTest clear = new FirstRecordTest("Just for test");
+        FirstRecordTest injected = new FirstRecordTest("<html>Juste for test</html>");
+        boolean dataSecured = injectionService.isDataSecured(clear);
+        boolean dataInjected = injectionService.isDataSecured(injected);
+
+        // Result
+        Assertions.assertAll(() -> {
+            Assertions.assertFalse(injectedString);
+            Assertions.assertTrue(clearString);
+            Assertions.assertFalse(injectedListIsSecured);
+            Assertions.assertTrue(dataSecured);
+            Assertions.assertFalse(dataInjected);
         });
     }
 }
