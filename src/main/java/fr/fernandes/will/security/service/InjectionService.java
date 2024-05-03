@@ -1,12 +1,12 @@
 package fr.fernandes.will.security.service;
 
+import fr.fernandes.will.security.annotation.SecurityIgnore;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import fr.fernandes.will.security.annotation.SecurityIgnore;
 
 public class InjectionService {
     private static final String PRIMITIVE_TYPE_PACKAGE = "java.lang.";
@@ -17,9 +17,13 @@ public class InjectionService {
 
         // SQL detection
         INJECTION_REGEX.add("DROP|SELECT|INSERT|UPDATE|DELETE|FROM|WHERE|DATABASE|TABLE|'|%%");
+
+        // HTML detection
+        INJECTION_REGEX.add("<(\\\"[^\\\"]*\\\"|'[^']*'|[^'\\\">])*>");
     }
 
-    private InjectionService() {}
+    private InjectionService() {
+    }
 
     /**
      * Getter for Security instance
@@ -47,20 +51,16 @@ public class InjectionService {
 
 
             return switch (clazz.getTypeName()) {
-                    // If data is an instance of a primitive type object, return true
-                case PRIMITIVE_TYPE_PACKAGE + "Boolean",
-                        PRIMITIVE_TYPE_PACKAGE + "Character",
-                        PRIMITIVE_TYPE_PACKAGE + "Long",
-                        PRIMITIVE_TYPE_PACKAGE + "Float",
-                        PRIMITIVE_TYPE_PACKAGE + "Byte",
-                        PRIMITIVE_TYPE_PACKAGE + "Double",
-                        PRIMITIVE_TYPE_PACKAGE + "Integer",
-                        PRIMITIVE_TYPE_PACKAGE + "Short" -> true;
+                // If data is an instance of a primitive type object, return true
+                case PRIMITIVE_TYPE_PACKAGE + "Boolean", PRIMITIVE_TYPE_PACKAGE + "Character",
+                     PRIMITIVE_TYPE_PACKAGE + "Long", PRIMITIVE_TYPE_PACKAGE + "Float", PRIMITIVE_TYPE_PACKAGE + "Byte",
+                     PRIMITIVE_TYPE_PACKAGE + "Double", PRIMITIVE_TYPE_PACKAGE + "Integer",
+                     PRIMITIVE_TYPE_PACKAGE + "Short" -> true;
 
-                    // Check string data validity
+                // Check string data validity
                 case PRIMITIVE_TYPE_PACKAGE + "String" -> stringValidity(dataToCheck.toString());
 
-                    // Check all custom class
+                // Check all custom class
                 default -> checkCustomClassValidity(dataToCheck);
             };
         } catch (Exception e) {
@@ -146,7 +146,9 @@ public class InjectionService {
         return true;
     }
 
-    /** Singleton instance */
+    /**
+     * Singleton instance
+     */
     private static final class InstanceHolder {
         private static final InjectionService INSTANCE = new InjectionService();
     }
