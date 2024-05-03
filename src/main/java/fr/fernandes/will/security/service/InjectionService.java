@@ -17,6 +17,9 @@ public class InjectionService {
 
         // SQL detection
         INJECTION_REGEX.add("DROP|SELECT|INSERT|UPDATE|DELETE|FROM|WHERE|DATABASE|TABLE|'|%%");
+
+        // HTML detection
+        INJECTION_REGEX.add("<(\\\"[^\\\"]*\\\"|'[^']*'|[^'\\\">])*>");
     }
 
     private InjectionService() {}
@@ -44,7 +47,6 @@ public class InjectionService {
             if (clazz.isPrimitive()) {
                 return true;
             }
-
 
             return switch (clazz.getTypeName()) {
                     // If data is an instance of a primitive type object, return true
