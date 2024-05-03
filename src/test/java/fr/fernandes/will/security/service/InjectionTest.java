@@ -1,12 +1,12 @@
 package fr.fernandes.will.security.service;
 
+import java.util.ArrayList;
+
 import fr.fernandes.will.security.record.FirstRecordTest;
 import fr.fernandes.will.security.record.SecondRecordTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
 
 public class InjectionTest {
     private final InjectionService injectionService = InjectionService.getInstance();
@@ -69,20 +69,18 @@ public class InjectionTest {
 
     @Test
     void list() {
-        ArrayList<String> listWithInjection = new ArrayList<String>();
-        listWithInjection.add("Now a normal test");
-        listWithInjection.add("Just for ;DROP TABLE user; test");
-        listWithInjection.add("Now a normal test");
+        ArrayList<String> injection = new ArrayList<>();
+        injection.add("Now a normal test");
+        injection.add("Just for ;DROP TABLE user; test");
+        injection.add("Now a normal test");
 
-
-        ArrayList<String> listWithoutInjection = new ArrayList<String>();
-        listWithoutInjection.add("Now a normal test");
-        listWithoutInjection.add("Just for ;DROP TABLE user; test");
-        listWithoutInjection.add("Now a normal test");
+        ArrayList<String> regularList = new ArrayList<>();
+        regularList.add("Now a normal test");
+        regularList.add("Now a normal test");
 
         Assertions.assertAll(() -> {
-            Assertions.assertFalse(injectionService.isDataSecured(listWithInjection));
-            Assertions.assertTrue(injectionService.isDataSecured(listWithoutInjection));
+            Assertions.assertFalse(injectionService.isDataSecured(injection));
+            Assertions.assertTrue(injectionService.isDataSecured(regularList));
         });
     }
 }
