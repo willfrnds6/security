@@ -15,8 +15,8 @@ public class InjectionService {
     static {
         INJECTION_REGEX = new ArrayList<>();
 
-        // Set SQL injection detection
-        INJECTION_REGEX.add(PRIMITIVE_TYPE_PACKAGE + "DROP|SELECT|INSERT|UPDATE|DELETE|FROM|WHERE|DATABASE|TABLE|'|%%");
+        // SQL detection
+        INJECTION_REGEX.add("DROP|SELECT|INSERT|UPDATE|DELETE|FROM|WHERE|DATABASE|TABLE|'|%%");
     }
 
     private InjectionService() {}
@@ -32,6 +32,11 @@ public class InjectionService {
 
     public boolean isDataSecured(Object dataToCheck) {
         try {
+            // Check if class is a list
+            if (dataToCheck instanceof List<?>) {
+                return listDataValidity((List<?>) dataToCheck);
+            }
+
             // Get object class
             Class<?> clazz = dataToCheck.getClass();
 
@@ -39,6 +44,7 @@ public class InjectionService {
             if (clazz.isPrimitive()) {
                 return true;
             }
+
 
             return switch (clazz.getTypeName()) {
                     // If data is an instance of a primitive type object, return true
@@ -53,9 +59,6 @@ public class InjectionService {
 
                     // Check string data validity
                 case PRIMITIVE_TYPE_PACKAGE + "String" -> stringValidity(dataToCheck.toString());
-
-                    // Check list data validity
-                case "java.util.List" -> listDataValidity((List<?>) dataToCheck);
 
                     // Check all custom class
                 default -> checkCustomClassValidity(dataToCheck);
