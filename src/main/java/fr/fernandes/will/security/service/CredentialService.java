@@ -98,7 +98,7 @@ public class CredentialService {
      * @return True if password is secured
      */
     public boolean passwordIsSecured(String password) {
-        String passwordSecuredRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=]).{" + passwordLength + ",}$";
+        String passwordSecuredRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$_%^&+=]).{" + passwordLength + ",}$";
         return !password.isBlank() && password.matches(passwordSecuredRegex);
     }
 

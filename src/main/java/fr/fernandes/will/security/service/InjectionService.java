@@ -49,7 +49,7 @@ public class InjectionService {
             }
 
             return switch (clazz.getTypeName()) {
-                    // If data is an instance of a primitive type object, return true
+                // If data is an instance of a primitive type object, return true
                 case PRIMITIVE_TYPE_PACKAGE + "Boolean",
                         PRIMITIVE_TYPE_PACKAGE + "Character",
                         PRIMITIVE_TYPE_PACKAGE + "Long",
