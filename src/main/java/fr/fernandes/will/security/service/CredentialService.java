@@ -12,8 +12,20 @@ import io.jsonwebtoken.Jwts;
 
 public class CredentialService {
     private static final Argon2 encoder = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id, 32, 64);
+    private int passwordLength;
 
-    private CredentialService() {}
+    private CredentialService() {
+        this.passwordLength = 12;
+    }
+
+    /**
+     * Update min length password
+     *
+     * @param passwordLength new password length
+     */
+    public void setPasswordLength(int passwordLength) {
+        this.passwordLength = passwordLength;
+    }
 
     /**
      * Getter for Credential instance
@@ -52,7 +64,7 @@ public class CredentialService {
      * @return true if email is valid | false if not
      */
     public boolean isValidEmail(String email) {
-        return email.isBlank() || email.matches("^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$");
+        return !email.isBlank() && email.matches("^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$");
     }
 
     /**
@@ -77,6 +89,17 @@ public class CredentialService {
                 .subject("Security Token")
                 .id(UUID.randomUUID().toString())
                 .compact();
+    }
+
+    /**
+     * Check if password is secured
+     *
+     * @param password password to check
+     * @return True if password is secured
+     */
+    public boolean passwordIsSecured(String password) {
+        String passwordSecuredRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=]).{" + passwordLength + ",}$";
+        return !password.isBlank() && password.matches(passwordSecuredRegex);
     }
 
     /** Instance holder */
