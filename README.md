@@ -59,7 +59,7 @@ CredentialService credentialService = CredentialService.getInstance();
 credentialService.passwordIsSecured("yourSecuredPassword");
 ```
 This method return `true` if password contain
-lowercase letter, one uppercase letter, special characters, numbers and a minimum of 8 characters
+lowercase letter, one uppercase letter, special characters, numbers and a minimum of 12 characters
 
 The minimum password size can be updated using a setter
 ```java
