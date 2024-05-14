@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
+import fr.fernandes.will.security.util.StringManagement;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 
@@ -64,6 +65,10 @@ public class CredentialService {
      * @return true if email is valid | false if not
      */
     public boolean isValidEmail(String email) {
+        // Remove empty spaces
+        email = StringManagement.removeSpaces(email);
+
+        // Check if email is valid
         return !email.isBlank() && email.matches("^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$");
     }
 
@@ -80,6 +85,9 @@ public class CredentialService {
         // Set properties into token
         String[] split;
         for (String claim : properties) {
+            // Remove space
+            claim = StringManagement.removeSpaces(claim);
+
             split = claim.split("=", -1);
             builder.claim(split[0], split[1]);
         }
@@ -98,6 +106,8 @@ public class CredentialService {
      * @return True if password is secured
      */
     public boolean passwordIsSecured(String password) {
+        password = StringManagement.removeSpaces(password);
+
         String passwordSecuredRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$_%^&+=]).{" + passwordLength + ",}$";
         return !password.isBlank() && password.matches(passwordSecuredRegex);
     }
