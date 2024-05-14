@@ -2,9 +2,13 @@
 
 This library can check many important things for the security of your application
 
-## Checks
+## Functionalities
 - SQL injection
+- HTML injection
 - Email verification
+- JWT Token generation
+- Hash password
+- Strong password detection
 
 ## Injection
 Example:
