@@ -20,6 +20,7 @@ public class CredentialService {
 
     /**
      * Update min length password
+     *
      * @param passwordLength new password length
      */
     public void setPasswordLength(int passwordLength) {
@@ -63,7 +64,7 @@ public class CredentialService {
      * @return true if email is valid | false if not
      */
     public boolean isValidEmail(String email) {
-        return !email.isBlank() || email.matches("^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$");
+        return !email.isBlank() && email.matches("^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$");
     }
 
     /**
@@ -97,8 +98,8 @@ public class CredentialService {
      * @return True if password is secured
      */
     public boolean passwordIsSecured(String password) {
-        String passwordSecuredRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=]).{"+ passwordLength +",}$";
-        return !password.isBlank() || password.matches(passwordSecuredRegex);
+        String passwordSecuredRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=]).{" + passwordLength + ",}$";
+        return !password.isBlank() && password.matches(passwordSecuredRegex);
     }
 
     /** Instance holder */
