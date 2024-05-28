@@ -12,11 +12,12 @@ import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 
 public class CredentialService {
-    private static final Argon2 encoder = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id, 32, 64);
+    private final Argon2 encoder;
     private int passwordLength;
 
     private CredentialService() {
         this.passwordLength = 12;
+        encoder = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id, 32, 64);
     }
 
     /**
