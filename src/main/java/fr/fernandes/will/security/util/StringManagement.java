@@ -1,8 +1,7 @@
 package fr.fernandes.will.security.util;
 
 public class StringManagement {
-    private StringManagement() {
-    }
+    private StringManagement() {}
 
     /**
      * Remove all spaces of a string
