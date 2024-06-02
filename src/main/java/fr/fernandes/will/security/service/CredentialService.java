@@ -115,7 +115,7 @@ public class CredentialService {
     }
 
     /** Instance holder */
-    public static final class InstanceHolder {
+    private static final class InstanceHolder {
         private static final CredentialService INSTANCE = new CredentialService();
     }
 }
