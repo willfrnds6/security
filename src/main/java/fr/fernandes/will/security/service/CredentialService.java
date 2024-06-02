@@ -7,7 +7,7 @@ import java.util.UUID;
 
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
-import fr.fernandes.will.security.util.StringManagement;
+import fr.fernandes.will.security.util.StringManager;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 
@@ -41,11 +41,12 @@ public class CredentialService {
     /**
      * Hash value sends in argon 2 ID
      *
-     * @param data data we want to hash
+     * @param clearValue data we want to hash
      * @return data hashed
      */
-    public String hash(String data) {
-        return encoder.hash(2, 15 * 1024, 1, data.toCharArray());
+    public String hash(String clearValue) {
+        clearValue = StringManager.removeSpaces(clearValue);
+        return encoder.hash(2, 15 * 1024, 1, clearValue.toCharArray());
     }
 
     /**
@@ -66,8 +67,8 @@ public class CredentialService {
      * @return true if email is valid | false if not
      */
     public boolean isValidEmail(String email) {
-        // Remove empty spaces
-        email = StringManagement.removeSpaces(email);
+        // Remove spaces
+        email = StringManager.removeSpaces(email);
 
         // Check if email is valid
         return !email.isBlank() && email.matches("^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$");
@@ -87,7 +88,7 @@ public class CredentialService {
         String[] split;
         for (String claim : properties) {
             // Remove space
-            claim = StringManagement.removeSpaces(claim);
+            claim = StringManager.removeSpaces(claim);
 
             split = claim.split("=", -1);
             builder.claim(split[0], split[1]);
@@ -107,7 +108,7 @@ public class CredentialService {
      * @return True if password is secured
      */
     public boolean passwordIsSecured(String password) {
-        password = StringManagement.removeSpaces(password);
+        password = StringManager.removeSpaces(password);
 
         String passwordSecuredRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$_%^&+=]).{" + passwordLength + ",}$";
         return !password.isBlank() && password.matches(passwordSecuredRegex);
