@@ -1,22 +1,34 @@
 package fr.fernandes.will.security.service;
 
+import com.password4j.Password;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
 public class CredentialTest {
-    private final CredentialService credentialService = CredentialService.getInstance();
+    private final CredentialService credentialService;
+
+    public CredentialTest() {
+        credentialService = CredentialService.getInstance();
+    }
 
     /** Test hash password */
     @Test
     @Order(1)
     @DisplayName("Hash password")
     void hashPassword() {
+        // Hash password
         String password = "password";
-        String hash = credentialService.hash(password);
+        String localHash =
+                Password.hash(password).addSalt(new byte[12]).withArgon2().getResult();
 
-        Assertions.assertNotEquals(password, hash);
+        // Check encoder
+        Assertions.assertTrue(Password.check(password, localHash).withArgon2());
+
+        // Check if hash match with service version
+        String serviceHash = credentialService.hash(password);
+        Assertions.assertTrue(Password.check(password, serviceHash).withArgon2());
     }
 
     /** Check if a hashed password, match with clear password */

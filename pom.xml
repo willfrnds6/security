@@ -1,9 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>fr.fernandes.will.security</groupId>
+    <groupId>fr.fernandes.will</groupId>
     <artifactId>security</artifactId>
-    <version>1.1</version>
+    <version>1.2</version>
     <name>Security</name>
 
     <properties>
@@ -45,9 +45,9 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>de.mkammerer</groupId>
-            <artifactId>argon2-jvm</artifactId>
-            <version>2.11</version>
+            <groupId>com.password4j</groupId>
+            <artifactId>password4j</artifactId>
+            <version>1.8.2</version>
         </dependency>
     </dependencies>
 
