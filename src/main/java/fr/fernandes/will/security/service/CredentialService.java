@@ -5,20 +5,17 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.UUID;
 
-import de.mkammerer.argon2.Argon2;
-import de.mkammerer.argon2.Argon2Factory;
+import com.password4j.Hash;
+import com.password4j.Password;
 import fr.fernandes.will.security.util.StringManager;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 
 public class CredentialService {
-    private final Argon2 encoder;
-
     private int passwordLength;
 
     private CredentialService() {
         passwordLength = 12;
-        encoder = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id, 32, 64);
     }
 
     /**
@@ -47,7 +44,8 @@ public class CredentialService {
      */
     public String hash(String clearValue) {
         clearValue = StringManager.removeSpaces(clearValue);
-        return encoder.hash(2, 15 * 1024, 1, clearValue.toCharArray());
+        Hash hash = Password.hash(clearValue).addSalt(new byte[12]).withArgon2();
+        return hash.getResult();
     }
 
     /**
@@ -58,7 +56,7 @@ public class CredentialService {
      * @return true if values are equals, false if not
      */
     public boolean checkMatch(String hashedValue, String clearValue) {
-        return encoder.verify(hashedValue, clearValue.toCharArray());
+        return Password.check(clearValue, hashedValue).withArgon2();
     }
 
     /**

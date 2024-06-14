@@ -1,7 +1,6 @@
 package fr.fernandes.will.security.service;
 
-import de.mkammerer.argon2.Argon2;
-import de.mkammerer.argon2.Argon2Factory;
+import com.password4j.Password;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
@@ -21,15 +20,15 @@ public class CredentialTest {
     void hashPassword() {
         // Hash password
         String password = "password";
-        Argon2 encoder = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id, 32, 64);
-        String localHash = encoder.hash(2, 15 * 1024, 1, password.toCharArray());
+        String localHash =
+                Password.hash(password).addSalt(new byte[12]).withArgon2().getResult();
 
         // Check encoder
-        Assertions.assertTrue(encoder.verify(localHash, password.toCharArray()));
+        Assertions.assertTrue(Password.check(password, localHash).withArgon2());
 
         // Check if hash match with service version
         String serviceHash = credentialService.hash(password);
-        Assertions.assertTrue(encoder.verify(serviceHash, password.toCharArray()));
+        Assertions.assertTrue(Password.check(password, serviceHash).withArgon2());
     }
 
     /** Check if a hashed password, match with clear password */
