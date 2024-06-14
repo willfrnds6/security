@@ -1,22 +1,35 @@
 package fr.fernandes.will.security.service;
 
+import de.mkammerer.argon2.Argon2;
+import de.mkammerer.argon2.Argon2Factory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
 public class CredentialTest {
-    private final CredentialService credentialService = CredentialService.getInstance();
+    private final CredentialService credentialService;
+
+    public CredentialTest() {
+        credentialService = CredentialService.getInstance();
+    }
 
     /** Test hash password */
     @Test
     @Order(1)
     @DisplayName("Hash password")
     void hashPassword() {
+        // Hash password
         String password = "password";
-        String hash = credentialService.hash(password);
+        Argon2 encoder = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id, 32, 64);
+        String localHash = encoder.hash(2, 15 * 1024, 1, password.toCharArray());
 
-        Assertions.assertNotEquals(password, hash);
+        // Check encoder
+        Assertions.assertTrue(encoder.verify(localHash, password.toCharArray()));
+
+        // Check if hash match with service version
+        String serviceHash = credentialService.hash(password);
+        Assertions.assertTrue(encoder.verify(serviceHash, password.toCharArray()));
     }
 
     /** Check if a hashed password, match with clear password */

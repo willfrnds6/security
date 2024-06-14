@@ -13,20 +13,12 @@ import io.jsonwebtoken.Jwts;
 
 public class CredentialService {
     private final Argon2 encoder;
+
     private int passwordLength;
 
     private CredentialService() {
-        this.passwordLength = 12;
+        passwordLength = 12;
         encoder = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id, 32, 64);
-    }
-
-    /**
-     * Update min length password
-     *
-     * @param passwordLength new password length
-     */
-    public void setPasswordLength(int passwordLength) {
-        this.passwordLength = passwordLength;
     }
 
     /**
@@ -36,6 +28,15 @@ public class CredentialService {
      */
     public static CredentialService getInstance() {
         return InstanceHolder.INSTANCE;
+    }
+
+    /**
+     * Update min length password
+     *
+     * @param passwordLength new password length
+     */
+    public void setPasswordLength(int passwordLength) {
+        this.passwordLength = passwordLength;
     }
 
     /**
