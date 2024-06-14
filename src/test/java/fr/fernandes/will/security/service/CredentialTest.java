@@ -20,8 +20,7 @@ public class CredentialTest {
     void hashPassword() {
         // Hash password
         String password = "password";
-        String localHash =
-                Password.hash(password).addSalt(new byte[12]).withArgon2().getResult();
+        String localHash = Password.hash(password).addRandomSalt().withArgon2().getResult();
 
         // Check encoder
         Assertions.assertTrue(Password.check(password, localHash).withArgon2());

@@ -12,6 +12,7 @@ import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 
 public class CredentialService {
+    private static final String EMAIL_REGEX = "^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$";
     private int passwordLength;
 
     private CredentialService() {
@@ -44,7 +45,7 @@ public class CredentialService {
      */
     public String hash(String clearValue) {
         clearValue = StringManager.removeSpaces(clearValue);
-        Hash hash = Password.hash(clearValue).addSalt(new byte[12]).withArgon2();
+        Hash hash = Password.hash(clearValue).addRandomSalt().withArgon2();
         return hash.getResult();
     }
 
@@ -70,7 +71,7 @@ public class CredentialService {
         email = StringManager.removeSpaces(email);
 
         // Check if email is valid
-        return !email.isBlank() && email.matches("^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$");
+        return !email.isBlank() && email.matches(EMAIL_REGEX);
     }
 
     /**
@@ -109,8 +110,8 @@ public class CredentialService {
     public boolean passwordIsSecured(String password) {
         password = StringManager.removeSpaces(password);
 
-        String passwordSecuredRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$_%^&+=]).{" + passwordLength + ",}$";
-        return !password.isBlank() && password.matches(passwordSecuredRegex);
+        return !password.isBlank()
+                && password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$_%^&+=]).{" + passwordLength + ",}$");
     }
 
     /** Instance holder */
