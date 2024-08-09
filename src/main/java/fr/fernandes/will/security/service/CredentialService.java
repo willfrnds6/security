@@ -45,7 +45,7 @@ public class CredentialService {
      */
     public String hash(String clearValue) {
         clearValue = StringManager.removeSpaces(clearValue);
-        Hash hash = Password.hash(clearValue).addRandomSalt().withArgon2();
+        Hash hash = Password.hash(clearValue).addRandomSalt(18).withArgon2();
         return hash.getResult();
     }
 

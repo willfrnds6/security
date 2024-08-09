@@ -20,7 +20,8 @@ public class CredentialTest {
     void hashPassword() {
         // Hash password
         String password = "password";
-        String localHash = Password.hash(password).addRandomSalt().withArgon2().getResult();
+        String localHash =
+                Password.hash(password).addRandomSalt(18).withArgon2().getResult();
 
         // Check encoder
         Assertions.assertTrue(Password.check(password, localHash).withArgon2());
@@ -28,6 +29,9 @@ public class CredentialTest {
         // Check if hash match with service version
         String serviceHash = credentialService.hash(password);
         Assertions.assertTrue(Password.check(password, serviceHash).withArgon2());
+
+        // Check if hash's length is not bigger than 255
+        Assertions.assertTrue(localHash.length() <= 255 && serviceHash.length() <= 255);
     }
 
     /** Check if a hashed password, match with clear password */
